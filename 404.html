@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <script>
+        const path = window.location.pathname.substring(1);
+        if (path && path !== 'index.html') {
+            const stored = localStorage.getItem('shortenedUrls');
+            if (stored) {
+                const urls = JSON.parse(stored);
+                const found = urls.find(item => item.code === path);
+                if (found) {
+                    window.location.href = found.longUrl;
+                } else {
+                    window.location.href = '/';
+                }
+            } else {
+                window.location.href = '/';
+            }
+        } else {
+            window.location.href = '/';
+        }
+    </script>
+</head>
+<body>Yönlendiriliyor...</body>
+</html>

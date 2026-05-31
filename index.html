@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTTP URL Kısaltıcı</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+
+        input[type="url"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="url"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .result {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .short-url {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .short-url input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: white;
+        }
+
+        .copy-btn {
+            padding: 10px 20px;
+            background: #28a745;
+            width: auto;
+        }
+
+        .copy-btn:hover {
+            background: #218838;
+        }
+
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .url-list {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .url-item {
+            background: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+            font-size: 14px;
+        }
+
+        .url-item strong {
+            color: #667eea;
+        }
+
+        .clear-btn {
+            background: #dc3545;
+            margin-top: 10px;
+        }
+
+        .clear-btn:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔗 HTTP URL Kısaltıcı</h1>
+        <div class="subtitle">Linkleriniz http:// ile başlayacak şekilde kısaltılır</div>
+        
+        <div class="input-group">
+            <label>Uzun URL girin:</label>
+            <input type="url" id="longUrl" placeholder="https://ornek.com/çok-uzun-bir-link" value="http://">
+        </div>
+        
+        <button onclick="shortenUrl()">URL Kısalt ✂️</button>
+        
+        <div class="result" id="result">
+            <h3>✅ Kısaltılmış URL (HTTP):</h3>
+            <div class="short-url">
+                <input type="text" id="shortUrl" readonly>
+                <button class="copy-btn" onclick="copyToClipboard()">Kopyala</button>
+            </div>
+        </div>
+        
+        <div class="info">
+            <strong>ℹ️ Bilgi:</strong> Bu araç URL'lerinizi http:// protokolü ile kısaltır. 
+            Kısaltılmış linkler http:// formatında oluşturulur.
+        </div>
+        
+        <div class="url-list" id="urlList">
+            <h3>📋 Kısaltılmış Linklerim:</h3>
+            <div id="linksContainer"></div>
+            <button class="clear-btn" onclick="clearAll()">Tümünü Temizle</button>
+        </div>
+    </div>
+
+    <script>
+        // LocalStorage'dan kayıtlı linkleri yükle
+        let shortenedUrls = JSON.parse(localStorage.getItem('shortenedUrls')) || [];
+        
+        // Karakter havuzu (kısa kod oluşturmak için)
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        
+        // Ana sayfa URL'si (kendi domaininizle değiştirin)
+        const baseUrl = window.location.origin + window.location.pathname;
+        
+        // Kısa kod oluştur
+        function generateShortCode() {
+            let code = '';
+            for (let i = 0; i < 6; i++) {
+                code += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return code;
+        }
+        
+        // URL'yi kontrol et ve http yap
+        function formatUrl(url) {
+            // Eğer https:// ile başlıyorsa http:// yap
+            if (url.startsWith('https://')) {
+                url = 'http://' + url.slice(8);
+            }
+            // Eğer http:// ile başlamıyorsa ekle
+            else if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                url = 'http://' + url;
+            }
+            return url;
+        }
+        
+        // URL kısaltma fonksiyonu
+        function shortenUrl() {
+            let longUrl = document.getElementById('longUrl').value.trim();
+            
+            if (!longUrl) {
+                alert('Lütfen bir URL girin!');
+                return;
+            }
+            
+            // URL'yi http formatına çevir
+            longUrl = formatUrl(longUrl);
+            
+            // Kısa kod oluştur
+            let shortCode = generateShortCode();
+            
+            // Aynı URL daha önce kısaltılmış mı kontrol et
+            let existing = shortenedUrls.find(item => item.longUrl === longUrl);
+            if (existing) {
+                alert('Bu URL zaten kısaltılmış!');
+                displayResult(existing.shortUrl);
+                return;
+            }
+            
+            // HTTP olarak kısaltılmış URL oluştur (http:// ile başlayacak)
+            let shortUrl = baseUrl + '?code=' + shortCode;
+            
+            // Kaydet
+            shortenedUrls.unshift({
+                code: shortCode,
+                longUrl: longUrl,
+                shortUrl: shortUrl,
+                date: new Date().toLocaleString()
+            });
+            
+            // LocalStorage'a kaydet
+            localStorage.setItem('shortenedUrls', JSON.stringify(shortenedUrls));
+            
+            // Sonucu göster
+            displayResult(shortUrl);
+            updateUrlList();
+            
+            // Input'u temizle
+            document.getElementById('longUrl').value = 'http://';
+        }
+        
+        // Sonucu göster
+        function displayResult(shortUrl) {
+            const resultDiv = document.getElementById('result');
+            const shortUrlInput = document.getElementById('shortUrl');
+            
+            shortUrlInput.value = shortUrl;
+            resultDiv.classList.add('show');
+        }
+        
+        // Kopyalama
+        function copyToClipboard() {
+            const shortUrlInput = document.getElementById('shortUrl');
+            shortUrlInput.select();
+            document.execCommand('copy');
+            
+            // Kopyalandı bildirimi
+            const copyBtn = document.querySelector('.copy-btn');
+            const originalText = copyBtn.textContent;
+            copyBtn.textContent = 'Kopyalandı! ✓';
+            setTimeout(() => {
+                copyBtn.textContent = originalText;
+            }, 2000);
+        }
+        
+        // URL listesini güncelle
+        function updateUrlList() {
+            const container = document.getElementById('linksContainer');
+            
+            if (shortenedUrls.length === 0) {
+                container.innerHTML = '<p style="color: #999; text-align: center;">Henüz kısaltılmış link yok.</p>';
+                return;
+            }
+            
+            container.innerHTML = shortenedUrls.map(item => `
+                <div class="url-item">
+                    <strong>🔗 Kısa URL (HTTP):</strong> ${item.shortUrl}<br>
+                    <strong>📎 Uzun URL:</strong> ${item.longUrl}<br>
+                    <strong>📅 Tarih:</strong> ${item.date}
+                </div>
+            `).join('');
+        }
+        
+        // Tüm linkleri temizle
+        function clearAll() {
+            if (confirm('Tüm kısaltılmış linkleri silmek istediğinize emin misiniz?')) {
+                shortenedUrls = [];
+                localStorage.setItem('shortenedUrls', JSON.stringify(shortenedUrls));
+                updateUrlList();
+                document.getElementById('result').classList.remove('show');
+                alert('Tüm linkler temizlendi!');
+            }
+        }
+        
+        // Sayfa yüklendiğinde listeyi göster
+        updateUrlList();
+        
+        // URL'den kodu al ve yönlendir
+        function handleRedirect() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const code = urlParams.get('code');
+            
+            if (code) {
+                const found = shortenedUrls.find(item => item.code === code);
+                if (found) {
+                    // HTTP protokolü ile yönlendir
+                    window.location.href = found.longUrl;
+                } else {
+                    alert('Geçersiz veya süresi dolmuş link!');
+                }
+            }
+        }
+        
+        // Sayfa yüklendiğinde yönlendirmeyi kontrol et
+        handleRedirect();
+        
+        // Enter tuşuna basınca kısaltma yap
+        document.getElementById('longUrl').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                shortenUrl();
+            }
+        });
+    </script>
+</body>
+</html>
