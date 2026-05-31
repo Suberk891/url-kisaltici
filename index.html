@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ Süper URL Kısaltıcı | HTTP Linkler</title>
+    <title>💰 Kazançlı URL Kısaltıcı | Link ile Para Kazan</title>
     <style>
         * {
             margin: 0;
@@ -13,379 +13,387 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
             padding: 20px;
-            transition: all 0.3s;
-        }
-
-        body.dark {
-            background: linear-gradient(135deg, #1e1e2e 0%, #2d1b4e 100%);
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
-        /* Ana kart */
-        .main-card {
+        /* Dashboard */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-card {
             background: white;
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            margin-bottom: 30px;
-        }
-
-        body.dark .main-card {
-            background: #2d2d3d;
-            color: #e0e0e0;
-        }
-
-        /* Header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-        }
-
-        h1 {
-            color: #333;
-            font-size: 2em;
-        }
-
-        body.dark h1 {
-            color: #e0e0e0;
-        }
-
-        .theme-toggle {
-            background: #667eea;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            color: white;
-            font-size: 16px;
-            width: auto;
-        }
-
-        /* Input alanı */
-        .url-input-area {
-            background: #f8f9fa;
-            padding: 30px;
             border-radius: 15px;
-            margin-bottom: 20px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
         }
 
-        body.dark .url-input-area {
-            background: #3d3d4d;
+        .dashboard-card:hover {
+            transform: translateY(-5px);
         }
 
-        .input-group {
-            margin-bottom: 20px;
+        .dashboard-card h3 {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
         }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #555;
-            font-weight: 500;
+        .dashboard-card .value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #1e3c72;
         }
 
-        body.dark label {
-            color: #ccc;
+        .dashboard-card .small {
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
         }
 
-        input[type="url"], select {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            font-size: 16px;
-            transition: border-color 0.3s;
+        .earnings-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
         }
 
-        body.dark input, body.dark select {
-            background: #2d2d3d;
-            color: #e0e0e0;
-            border-color: #4a4a5a;
+        .earnings-card .value {
+            color: white;
         }
 
-        input:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .row-2cols {
+        /* Ana içerik */
+        .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            margin-bottom: 20px;
+            color: #1e3c72;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #1e3c72;
         }
 
         button {
             width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 12px;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.3s;
         }
 
         button:hover {
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        /* Sonuç kartı */
-        .result-card {
-            margin-top: 20px;
-            padding: 20px;
-            background: linear-gradient(135deg, #e8f0fe 0%, #f0e8fe 100%);
-            border-radius: 15px;
-            display: none;
-        }
-
-        body.dark .result-card {
-            background: linear-gradient(135deg, #1e3a5f 0%, #3d2b5f 100%);
-        }
-
-        .result-card.show {
-            display: block;
-            animation: fadeIn 0.5s;
-        }
-
-        .short-url-box {
-            display: flex;
-            gap: 10px;
-            margin: 15px 0;
-        }
-
-        .short-url-box input {
-            flex: 1;
-            background: white;
-        }
-
-        .qr-code {
-            text-align: center;
-            margin-top: 15px;
-            padding: 10px;
-            background: white;
+        .ad-toggle {
+            background: #f8f9fa;
+            padding: 15px;
             border-radius: 10px;
-            display: inline-block;
+            margin-bottom: 20px;
         }
 
-        body.dark .qr-code {
-            background: #2d2d3d;
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: #1e3c72;
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
         }
 
         /* Link listesi */
-        .links-section {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        body.dark .links-section {
-            background: #2d2d3d;
-        }
-
-        .search-bar {
-            margin-bottom: 20px;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-        }
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .stat-card h3 {
-            font-size: 24px;
-        }
-
-        .url-item {
+        .link-item {
             background: #f8f9fa;
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 10px;
-            border-left: 4px solid #667eea;
+            border-left: 4px solid #1e3c72;
         }
 
-        body.dark .url-item {
-            background: #3d3d4d;
-        }
-
-        .url-item strong {
-            color: #667eea;
-        }
-
-        .url-meta {
+        .link-stats {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             margin-top: 10px;
             font-size: 12px;
-            color: #666;
             flex-wrap: wrap;
         }
 
-        body.dark .url-meta {
-            color: #aaa;
+        .stat-badge {
+            background: #e0e0e0;
+            padding: 2px 8px;
+            border-radius: 20px;
         }
 
-        .click-count {
+        .earnings-badge {
             background: #28a745;
             color: white;
             padding: 2px 8px;
             border-radius: 20px;
-            font-size: 11px;
         }
 
-        .expired {
-            opacity: 0.5;
-            background: #dc3545;
-        }
-
-        .category-badge {
-            background: #667eea;
-            color: white;
+        .premium-badge {
+            background: gold;
+            color: #333;
             padding: 2px 8px;
             border-radius: 20px;
-            font-size: 11px;
+            font-weight: bold;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .referral-link {
+            background: #f0f0f0;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .ad-countdown {
+            font-size: 48px;
+            font-weight: bold;
+            color: #1e3c72;
+            margin: 20px 0;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="main-card">
-            <div class="header">
-                <div>
-                    <h1>✨ Süper URL Kısaltıcı</h1>
-                    <p>HTTP protokolü ile kısaltılmış linkler</p>
+        <!-- Dashboard -->
+        <div class="dashboard">
+            <div class="dashboard-card">
+                <h3>📊 Toplam Link</h3>
+                <div class="value" id="totalLinks">0</div>
+                <div class="small">oluşturuldu</div>
+            </div>
+            <div class="dashboard-card">
+                <h3>👆 Toplam Tıklanma</h3>
+                <div class="value" id="totalClicks">0</div>
+                <div class="small">bugün: <span id="todayClicks">0</span></div>
+            </div>
+            <div class="dashboard-card earnings-card">
+                <h3>💰 Kazancınız</h3>
+                <div class="value" id="totalEarnings">$0.00</div>
+                <div class="small">1000 tık = $1.00</div>
+            </div>
+            <div class="dashboard-card">
+                <h3>👥 Referanslar</h3>
+                <div class="value" id="referrals">0</div>
+                <div class="small">%10 komisyon</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Link Kısaltma Bölümü -->
+            <div class="card">
+                <h2>🔗 Link Kısalt ve Para Kazan</h2>
+                
+                <div class="ad-toggle">
+                    <label style="display: flex; justify-content: space-between; align-items: center;">
+                        <span>📺 Linke tıklayanlara reklam göster</span>
+                        <label class="switch">
+                            <input type="checkbox" id="adEnabled" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </label>
+                    <small style="color: #666;">Aktif: Her tıklamadan kazanırsınız</small>
                 </div>
-                <button class="theme-toggle" onclick="toggleTheme()">🌙 Tema Değiştir</button>
+
+                <input type="url" id="longUrl" placeholder="Uzun URL girin (örn: https://example.com/uzun-link)">
+                
+                <select id="linkType">
+                    <option value="standard">Standart (10 saniye reklam)</option>
+                    <option value="premium">Premium (Reklamsız - 1$)</option>
+                    <option value="vip">VIP (Reklamsız + Özel Analiz - 5$/ay)</option>
+                </select>
+
+                <button onclick="shortenUrl()">💰 Link Oluştur ve Para Kazan</button>
+
+                <div id="result" style="margin-top: 20px; display: none;">
+                    <h3>✅ Linkin Hazır!</h3>
+                    <input type="text" id="shortUrl" readonly style="background: #f0f0f0;">
+                    <button onclick="copyToClipboard()" style="margin-top: 10px;">📋 Kopyala</button>
+                    <div class="referral-link">
+                        <strong>🔗 Referans Linkin:</strong><br>
+                        <input type="text" id="referralUrl" readonly style="background: #f0f0f0; margin-top: 5px;">
+                        <small>Arkadaşını getir, kazancının %10'unu kazan!</small>
+                    </div>
+                </div>
             </div>
 
-            <div class="url-input-area">
-                <div class="input-group">
-                    <label>🔗 Uzun URL girin:</label>
-                    <input type="url" id="longUrl" placeholder="http://ornek.com/uzun-link" value="http://">
-                </div>
-
-                <div class="row-2cols">
-                    <div class="input-group">
-                        <label>🏷️ Kategori:</label>
-                        <select id="category">
-                            <option value="Genel">Genel</option>
-                            <option value="Sosyal Medya">Sosyal Medya</option>
-                            <option value="Alışveriş">Alışveriş</option>
-                            <option value="Eğitim">Eğitim</option>
-                            <option value="Eğlence">Eğlence</option>
-                            <option value="İş">İş</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>⏰ Link süresi (gün):</label>
-                        <select id="expiryDays">
-                            <option value="0">Süresiz</option>
-                            <option value="1">1 gün</option>
-                            <option value="7">7 gün</option>
-                            <option value="30">30 gün</option>
-                            <option value="90">90 gün</option>
-                        </select>
-                    </div>
-                </div>
-
-                <button onclick="shortenUrl()">🚀 URL Kısalt</button>
-
-                <div class="result-card" id="result">
-                    <h3>✅ Linkin Hazır!</h3>
-                    <div class="short-url-box">
-                        <input type="text" id="shortUrl" readonly>
-                        <button class="copy-btn" onclick="copyToClipboard()" style="width: auto; padding: 12px 20px;">📋 Kopyala</button>
-                    </div>
-                    <div id="qrContainer" style="text-align: center;"></div>
+            <!-- Premium Üyelik -->
+            <div class="card">
+                <h2>⭐ Premium'a Geç, Daha Çok Kazan!</h2>
+                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); padding: 20px; border-radius: 10px; color: white;">
+                    <h3>Premium Özellikler:</h3>
+                    <ul style="margin-top: 10px; margin-left: 20px;">
+                        <li>✅ Reklamsız linkler</li>
+                        <li>✅ %50 daha fazla kazanç</li>
+                        <li>✅ Detaylı analitik (ülke, cihaz, tarayıcı)</li>
+                        <li>✅ Özel domain desteği</li>
+                        <li>✅ 7/24 öncelikli destek</li>
+                    </ul>
+                    <button onclick="upgradeToPremium()" style="margin-top: 15px; background: gold; color: #333;">🚀 Şimdi Yükselt - 1$/ay</button>
                 </div>
             </div>
         </div>
 
-        <div class="links-section">
-            <div class="stats">
-                <div class="stat-card">
-                    <div>📊 Toplam Link</div>
-                    <h3 id="totalLinks">0</h3>
-                </div>
-                <div class="stat-card">
-                    <div>👆 Toplam Tıklanma</div>
-                    <h3 id="totalClicks">0</h3>
-                </div>
-                <div class="stat-card">
-                    <div>🔥 En Popüler</div>
-                    <h3 id="popularLink">-</h3>
-                </div>
-            </div>
+        <!-- Link Listesi -->
+        <div class="card" style="margin-top: 30px;">
+            <h2>📋 Linklerim ve Kazançlarım</h2>
+            <input type="text" id="searchInput" placeholder="🔍 Linklerde ara..." onkeyup="filterLinks()">
+            <div id="linksContainer" style="max-height: 500px; overflow-y: auto;"></div>
+            <button onclick="withdrawEarnings()" style="background: #28a745; margin-top: 15px;">💰 Ödeme Talebi Oluştur</button>
+        </div>
+    </div>
 
-            <div class="search-bar">
-                <input type="text" id="searchInput" placeholder="🔍 Linklerde ara..." onkeyup="filterLinks()">
-            </div>
-
-            <div class="url-list" id="urlList">
-                <h3>📋 Linklerim</h3>
-                <div id="linksContainer"></div>
-                <button class="clear-btn" onclick="clearAll()" style="background: #dc3545; margin-top: 10px;">🗑️ Tümünü Temizle</button>
-            </div>
+    <!-- Reklam Modal -->
+    <div id="adModal" class="modal">
+        <div class="modal-content">
+            <h2>📺 Reklam İzleyerek Devam Et</h2>
+            <p>Linke yönlendirilmek için 10 saniye reklam izleyin</p>
+            <div class="ad-countdown" id="countdown">10</div>
+            <button id="watchAdBtn" style="background: #1e3c72;" onclick="watchAd()">Reklamı İzle</button>
+            <button onclick="closeAdModal()" style="background: #dc3545; margin-top: 10px;">Kapat</button>
         </div>
     </div>
 
     <script>
+        // Veritabanı
+        let userData = JSON.parse(localStorage.getItem('userData')) || {
+            totalEarnings: 0,
+            totalClicks: 0,
+            todayClicks: 0,
+            referrals: 0,
+            referralCode: Math.random().toString(36).substring(2, 8),
+            premium: false,
+            premiumExpiry: null,
+            lastReset: new Date().toDateString()
+        };
+
         let shortenedUrls = JSON.parse(localStorage.getItem('shortenedUrls')) || [];
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        let pendingRedirect = null;
+
+        // Günlük sıfırlama
+        if (userData.lastReset !== new Date().toDateString()) {
+            userData.todayClicks = 0;
+            userData.lastReset = new Date().toDateString();
+            localStorage.setItem('userData', JSON.stringify(userData));
+        }
+
         const baseUrl = window.location.origin + window.location.pathname;
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
         function generateShortCode() {
             let code = '';
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 5; i++) {
                 code += chars.charAt(Math.floor(Math.random() * chars.length));
             }
             return code;
         }
 
         function formatUrl(url) {
-            if (url.startsWith('https://')) {
-                url = 'http://' + url.slice(8);
-            } else if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            if (!url.startsWith('http://') && !url.startsWith('https://')) {
                 url = 'http://' + url;
             }
             return url;
@@ -393,173 +401,200 @@
 
         function shortenUrl() {
             let longUrl = document.getElementById('longUrl').value.trim();
-            let category = document.getElementById('category').value;
-            let expiryDays = parseInt(document.getElementById('expiryDays').value);
-            
+            let linkType = document.getElementById('linkType').value;
+            let hasAd = document.getElementById('adEnabled').checked;
+
             if (!longUrl) {
                 alert('Lütfen bir URL girin!');
                 return;
             }
-            
+
             longUrl = formatUrl(longUrl);
-            
-            let existing = shortenedUrls.find(item => item.longUrl === longUrl);
-            if (existing && !isExpired(existing)) {
-                alert('Bu URL zaten kısaltılmış!');
-                displayResult(existing);
-                return;
-            }
-            
             let shortCode = generateShortCode();
-            let expiryDate = expiryDays > 0 ? new Date(Date.now() + expiryDays * 86400000).toISOString() : null;
             
             let newLink = {
                 code: shortCode,
                 longUrl: longUrl,
                 shortUrl: baseUrl + '?code=' + shortCode,
-                date: new Date().toLocaleString(),
-                category: category,
-                expiryDate: expiryDate,
+                date: new Date().toISOString(),
+                linkType: linkType,
+                hasAd: hasAd,
                 clicks: 0,
-                timestamp: Date.now()
+                earnings: 0,
+                premiumUser: userData.premium,
+                country: 'Bilinmiyor',
+                device: 'Bilinmiyor'
             };
-            
+
             shortenedUrls.unshift(newLink);
             localStorage.setItem('shortenedUrls', JSON.stringify(shortenedUrls));
-            displayResult(newLink);
-            updateUrlList();
-            updateStats();
             
-            document.getElementById('longUrl').value = 'http://';
-        }
-
-        function displayResult(link) {
-            const resultDiv = document.getElementById('result');
-            const shortUrlInput = document.getElementById('shortUrl');
-            shortUrlInput.value = link.shortUrl;
-            resultDiv.classList.add('show');
+            updateDashboard();
+            updateLinkList();
             
-            // QR Code oluştur
-            generateQRCode(link.shortUrl);
-        }
-
-        function generateQRCode(url) {
-            const qrContainer = document.getElementById('qrContainer');
-            const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(url)}`;
-            qrContainer.innerHTML = `<div class="qr-code"><img src="${qrUrl}" alt="QR Code"><br><small>QR Kodu Tara</small></div>`;
-        }
-
-        function copyToClipboard() {
-            const shortUrlInput = document.getElementById('shortUrl');
-            shortUrlInput.select();
-            document.execCommand('copy');
-            alert('✅ Link kopyalandı!');
-        }
-
-        function isExpired(link) {
-            if (!link.expiryDate) return false;
-            return new Date(link.expiryDate) < new Date();
-        }
-
-        function updateUrlList() {
-            const container = document.getElementById('linksContainer');
-            const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
-            
-            let filtered = shortenedUrls.filter(item => 
-                item.longUrl.toLowerCase().includes(searchTerm) ||
-                item.category.toLowerCase().includes(searchTerm) ||
-                item.code.toLowerCase().includes(searchTerm)
-            );
-            
-            if (filtered.length === 0) {
-                container.innerHTML = '<p style="color: #999; text-align: center;">Henüz kısaltılmış link yok.</p>';
-                return;
-            }
-            
-            container.innerHTML = filtered.map(item => {
-                const expired = isExpired(item);
-                return `
-                    <div class="url-item ${expired ? 'expired' : ''}">
-                        <div>
-                            <strong>🔗 ${item.shortUrl}</strong>
-                            <span class="category-badge">${item.category}</span>
-                            <span class="click-count">👆 ${item.clicks || 0} tıklanma</span>
-                        </div>
-                        <div><strong>📎 Hedef:</strong> ${item.longUrl}</div>
-                        <div class="url-meta">
-                            <span>📅 Oluşturulma: ${item.date}</span>
-                            ${item.expiryDate ? `<span>⏰ Son kullanma: ${new Date(item.expiryDate).toLocaleDateString()}</span>` : '<span>♾️ Süresiz</span>'}
-                            ${expired ? '<span style="color: red;">⚠️ SÜRESİ DOLDU</span>' : ''}
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function filterLinks() {
-            updateUrlList();
-        }
-
-        function updateStats() {
-            document.getElementById('totalLinks').textContent = shortenedUrls.length;
-            const totalClicks = shortenedUrls.reduce((sum, item) => sum + (item.clicks || 0), 0);
-            document.getElementById('totalClicks').textContent = totalClicks;
-            
-            const mostClicked = [...shortenedUrls].sort((a, b) => (b.clicks || 0) - (a.clicks || 0))[0];
-            if (mostClicked) {
-                document.getElementById('popularLink').textContent = mostClicked.code + ` (${mostClicked.clicks || 0})`;
-            }
-        }
-
-        function clearAll() {
-            if (confirm('Tüm linkleri silmek istediğinize emin misiniz?')) {
-                shortenedUrls = [];
-                localStorage.setItem('shortenedUrls', JSON.stringify(shortenedUrls));
-                updateUrlList();
-                updateStats();
-                document.getElementById('result').classList.remove('show');
-                alert('Tüm linkler temizlendi!');
-            }
-        }
-
-        function toggleTheme() {
-            document.body.classList.toggle('dark');
-            const btn = document.querySelector('.theme-toggle');
-            if (document.body.classList.contains('dark')) {
-                btn.textContent = '☀️ Açık Tema';
-            } else {
-                btn.textContent = '🌙 Koyu Tema';
-            }
+            document.getElementById('result').style.display = 'block';
+            document.getElementById('shortUrl').value = newLink.shortUrl;
+            document.getElementById('referralUrl').value = baseUrl + '?ref=' + userData.referralCode;
         }
 
         function handleRedirect() {
             const urlParams = new URLSearchParams(window.location.search);
             const code = urlParams.get('code');
+            const ref = urlParams.get('ref');
+
+            // Referans takibi
+            if (ref && ref !== userData.referralCode) {
+                userData.referrals++;
+                localStorage.setItem('userData', JSON.stringify(userData));
+                updateDashboard();
+            }
+
             if (code) {
-                const found = shortenedUrls.find(item => item.code === code);
-                if (found && !isExpired(found)) {
-                    found.clicks = (found.clicks || 0) + 1;
-                    localStorage.setItem('shortenedUrls', JSON.stringify(shortenedUrls));
-                    window.location.href = found.longUrl;
-                } else if (found && isExpired(found)) {
-                    alert('Bu linkin süresi dolmuştur!');
-                    window.location.href = '/';
+                const link = shortenedUrls.find(item => item.code === code);
+                if (link) {
+                    // Premium kontrolü
+                    if (link.linkType === 'premium' || link.linkType === 'vip' || userData.premium) {
+                        // Reklamsız direkt yönlendir
+                        trackClick(link);
+                        window.location.href = link.longUrl;
+                    } else if (link.hasAd) {
+                        // Reklam göster
+                        pendingRedirect = link;
+                        showAdModal();
+                    } else {
+                        // Reklamsız ama standart
+                        trackClick(link);
+                        window.location.href = link.longUrl;
+                    }
                 } else {
                     alert('Geçersiz link!');
-                    window.location.href = '/';
                 }
             }
         }
 
-        updateUrlList();
-        updateStats();
-        handleRedirect();
-        
-        document.getElementById('longUrl').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                shortenUrl();
+        function trackClick(link) {
+            link.clicks++;
+            
+            // Kazanç hesaplama (1000 tık = 1$)
+            let earningRate = userData.premium ? 0.002 : 0.001; // Premium %50 daha fazla
+            let earning = earningRate;
+            
+            link.earnings = (link.earnings || 0) + earning;
+            userData.totalEarnings += earning;
+            userData.totalClicks++;
+            userData.todayClicks++;
+            
+            localStorage.setItem('shortenedUrls', JSON.stringify(shortenedUrls));
+            localStorage.setItem('userData', JSON.stringify(userData));
+            updateDashboard();
+            updateLinkList();
+        }
+
+        function showAdModal() {
+            document.getElementById('adModal').style.display = 'flex';
+            let countdown = 10;
+            const countdownEl = document.getElementById('countdown');
+            const btn = document.getElementById('watchAdBtn');
+            
+            btn.disabled = true;
+            const timer = setInterval(() => {
+                countdown--;
+                countdownEl.textContent = countdown;
+                if (countdown <= 0) {
+                    clearInterval(timer);
+                    btn.disabled = false;
+                    btn.textContent = 'Reklamı İzledim, Devam Et';
+                }
+            }, 1000);
+        }
+
+        function watchAd() {
+            if (pendingRedirect) {
+                trackClick(pendingRedirect);
+                window.location.href = pendingRedirect.longUrl;
             }
-        });
+            closeAdModal();
+        }
+
+        function closeAdModal() {
+            document.getElementById('adModal').style.display = 'none';
+            pendingRedirect = null;
+        }
+
+        function updateDashboard() {
+            document.getElementById('totalLinks').textContent = shortenedUrls.length;
+            document.getElementById('totalClicks').textContent = userData.totalClicks;
+            document.getElementById('todayClicks').textContent = userData.todayClicks;
+            document.getElementById('totalEarnings').textContent = `$${userData.totalEarnings.toFixed(2)}`;
+            document.getElementById('referrals').textContent = userData.referrals;
+        }
+
+        function updateLinkList() {
+            const searchTerm = document.getElementById('searchInput')?.value.toLowerCase() || '';
+            const container = document.getElementById('linksContainer');
+            
+            let filtered = shortenedUrls.filter(item => 
+                item.longUrl.toLowerCase().includes(searchTerm) ||
+                item.code.toLowerCase().includes(searchTerm)
+            );
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #999;">Henüz link oluşturmadınız.</p>';
+                return;
+            }
+            
+            container.innerHTML = filtered.map(item => `
+                <div class="link-item">
+                    <div><strong>🔗 ${item.shortUrl}</strong></div>
+                    <div><small>📎 ${item.longUrl.substring(0, 60)}...</small></div>
+                    <div class="link-stats">
+                        <span class="stat-badge">👆 ${item.clicks} tık</span>
+                        <span class="earnings-badge">💰 $${(item.earnings || 0).toFixed(2)}</span>
+                        ${item.linkType !== 'standard' ? `<span class="premium-badge">⭐ ${item.linkType}</span>` : ''}
+                        <span>📅 ${new Date(item.date).toLocaleDateString()}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterLinks() {
+            updateLinkList();
+        }
+
+        function copyToClipboard() {
+            const shortUrl = document.getElementById('shortUrl');
+            shortUrl.select();
+            document.execCommand('copy');
+            alert('Link kopyalandı! 📋');
+        }
+
+        function upgradeToPremium() {
+            if (confirm('Premium üyeliğe geçmek istediğinize emin misiniz? 1$/ay')) {
+                // Ödeme simülasyonu
+                userData.premium = true;
+                userData.premiumExpiry = new Date(Date.now() + 30*86400000).toISOString();
+                localStorage.setItem('userData', JSON.stringify(userData));
+                alert('✅ Premium üyeliğiniz aktif! Artık %50 daha fazla kazanacaksınız.');
+                updateDashboard();
+                location.reload();
+            }
+        }
+
+        function withdrawEarnings() {
+            if (userData.totalEarnings >= 10) {
+                alert(`💰 ${userData.totalEarnings.toFixed(2)}$ ödeme talebiniz alındı! 24 saat içinde hesabınıza yatırılacak.`);
+                userData.totalEarnings = 0;
+                localStorage.setItem('userData', JSON.stringify(userData));
+                updateDashboard();
+            } else {
+                alert(`Minimum ödeme tutarı 10$. Mevcut bakiyeniz: $${userData.totalEarnings.toFixed(2)}`);
+            }
+        }
+
+        // İstatistikleri güncelle
+        updateDashboard();
+        updateLinkList();
+        handleRedirect();
     </script>
 </body>
 </html>
